@@ -7,12 +7,13 @@ import { UpdateTweetDto } from './dto/update-tweet.dto';
 export class TweetsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createTweetDto: CreateTweetDto) {
-    return this.prisma.tweet.create({
+  async create(createTweetDto: CreateTweetDto) {
+    const tweet = await this.prisma.tweet.create({
       data: {
         ...createTweetDto,
       },
     });
+    return tweet;
   }
 
   findAll() {
