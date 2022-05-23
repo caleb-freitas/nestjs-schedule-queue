@@ -1,1 +1,3 @@
-export class Tweet {}
+export class Tweet {
+  tweet: string;
+}

@@ -1,1 +1,3 @@
-export class CreateTweetDto {}
+export class CreateTweetDto {
+  tweet: string;
+}
