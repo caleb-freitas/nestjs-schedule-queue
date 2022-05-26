@@ -6,11 +6,19 @@ services:
     restart: always
     ports:
       - 5432:5432
-    env_file:
-      - .env
     volumes:
       - postgres:/var/lib/postgresql/data
+    env_file:
+      - .env
+  
+  api:
+    build: .
+    container_name: api
+    entrypoint: sh -c "npm install && npx prisma generate && npm run start:dev"
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/node/app
 
 volumes:
   postgres:
-    name: tweets
