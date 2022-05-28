@@ -1,7 +1,8 @@
+import { InjectQueue } from '@nestjs/bull';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
+import { Queue } from 'bull';
 import { Cache } from 'cache-manager';
-import { Console } from 'console';
 import { PrismaService } from 'src/config/prisma.service';
 
 @Injectable()
@@ -11,6 +12,8 @@ export class TweetsCountService {
     private prisma: PrismaService,
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache,
+    @InjectQueue('emails')
+    private emailsQueue: Queue,
   ) {}
 
   @Interval(5000)
@@ -34,8 +37,8 @@ export class TweetsCountService {
       this.cacheManager.set('tweet-offset', offset + this.limit, {
         ttl: TEN_MINUTES,
       });
-
       console.log(`Find ${this.limit} more tweets`);
+      this.emailsQueue.add(tweets);
     }
   }
 }
